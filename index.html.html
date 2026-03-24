@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hazheart × End Overdose</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --hz-black: #071a0f;
+    --hz-dark: #0d3d1e;
+    --hz-green: #22c55e;
+    --hz-green-glow: rgba(34,197,94,0.14);
+    --hz-green-border: rgba(34,197,94,0.28);
+    --hz-gold: #eab308;
+    --hz-gold-glow: rgba(234,179,8,0.12);
+    --hz-gold-border: rgba(234,179,8,0.28);
+    --white: #ffffff;
+    --gray: rgba(255,255,255,0.55);
+    --gray-dim: rgba(255,255,255,0.22);
+    --panel: rgba(255,255,255,0.04);
+    --panel-border: rgba(255,255,255,0.08);
+  }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: var(--hz-black); color: var(--white); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(7,26,15,0.96); border-bottom: 1px solid var(--hz-green-border);
+    display: flex; align-items: center; justify-content: space-between; padding: 10px 28px;
+    backdrop-filter: blur(8px);
+  }
+  .nav-brand { font-size: 14px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--hz-green); }
+  .nav-brand span { color: var(--white); }
+  .nav-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav-pill {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 4px; border: 1px solid rgba(34,197,94,0.2);
+    color: rgba(255,255,255,0.45); cursor: pointer; background: transparent; transition: all 0.15s;
+  }
+  .nav-pill:hover { background: var(--hz-green-glow); color: var(--hz-green); border-color: var(--hz-green-border); }
+
+  /* SLIDES */
+  .slide { min-height: 100vh; padding: 100px 48px 72px; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+  .slide-inner { max-width: 1020px; margin: 0 auto; width: 100%; }
+
+  /* HERO */
+  .hero-slide { background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(34,197,94,0.09) 0%, transparent 70%), var(--hz-black); text-align: center; }
+  .eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--hz-green); border: 1px solid var(--hz-green-border); padding: 6px 18px; border-radius: 3px; margin-bottom: 24px; }
+  .hero-title { font-size: clamp(46px, 7vw, 92px); font-weight: 900; line-height: 0.95; letter-spacing: -2px; text-transform: uppercase; margin-bottom: 10px; }
+  .hero-title .g { color: var(--hz-green); }
+  .hero-sub { font-size: 16px; color: var(--gray); max-width: 520px; margin: 18px auto 0; line-height: 1.7; }
+  .divider { width: 48px; height: 2px; background: var(--hz-green); margin: 26px auto; }
+  .presenter { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray-dim); }
+
+  /* STATS BAR */
+  .stats-bar { display: flex; margin-top: 44px; border: 1px solid var(--hz-green-border); border-radius: 6px; overflow: hidden; }
+  .stat-item { flex: 1; padding: 18px 12px; text-align: center; border-right: 1px solid var(--hz-green-border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-size: 26px; font-weight: 900; color: var(--hz-green); letter-spacing: -1px; }
+  .stat-label { font-size: 10px; color: var(--gray-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px; }
+
+  /* SECTION LABELS */
+  .section-tag { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--hz-green); display: block; margin-bottom: 8px; }
+  .slide-title { font-size: clamp(26px, 4vw, 50px); font-weight: 900; text-transform: uppercase; line-height: 1; letter-spacing: -1px; margin-bottom: 10px; }
+  .slide-title .g { color: var(--hz-green); }
+  .slide-sub { font-size: 15px; color: var(--gray); line-height: 1.7; max-width: 600px; margin-bottom: 32px; }
+
+  /* CARDS */
+  .card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px; padding: 22px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--hz-green-border); }
+  .card.green { background: var(--hz-green-glow); border-color: var(--hz-green-border); }
+  .card.gold { background: var(--hz-gold-glow); border-color: var(--hz-gold-border); }
+  .card-icon { font-size: 22px; margin-bottom: 12px; display: block; }
+  .card-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--white); margin-bottom: 6px; }
+  .card-body { font-size: 13px; color: var(--gray); line-height: 1.65; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+
+  /* FORMAT CARDS */
+  .fmt-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px; overflow: hidden; transition: border-color 0.2s; }
+  .fmt-card:hover { border-color: var(--hz-green-border); }
+  .fmt-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--panel-border); display: flex; align-items: flex-start; justify-content: space-between; }
+  .fmt-num { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--hz-green); margin-bottom: 5px; }
+  .fmt-name { font-size: 17px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; }
+  .fmt-body { padding: 16px 22px; font-size: 13px; color: var(--gray); line-height: 1.65; }
+  .fmt-tags { padding: 0 22px 18px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; background: rgba(34,197,94,0.1); color: var(--hz-green); border: 1px solid rgba(34,197,94,0.2); }
+
+  /* COLLAB SECTION */
+  .collab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  @media(max-width:580px){ .collab-grid { grid-template-columns: 1fr; } }
+  .collab-big { grid-column: 1 / -1; }
+  .cadence-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--hz-green-glow); border: 1px solid var(--hz-green-border);
+    border-radius: 4px; padding: 10px 16px; margin-bottom: 14px;
+  }
+  .cadence-pill .num { font-size: 22px; font-weight: 900; color: var(--hz-green); }
+  .cadence-pill .lbl { font-size: 12px; color: var(--gray); line-height: 1.4; }
+
+  /* NARCATS WORLD */
+  .narcats-card {
+    background: var(--hz-green-glow); border: 1px solid var(--hz-green-border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .narcats-header {
+    background: var(--hz-dark); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--hz-green-border);
+  }
+  .narcats-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--hz-green); }
+  .narcats-title { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--hz-green); }
+  .narcats-body { padding: 20px; }
+
+  /* CLAW MACHINE VISUAL */
+  .claw-vis { background: var(--panel); border: 1px solid var(--hz-green-border); border-radius: 8px; padding: 24px; text-align: center; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: var(--hz-green-border); }
+  .tl-item { position: relative; margin-bottom: 26px; }
+  .tl-dot { position: absolute; left: -30px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--hz-green); }
+  .tl-phase { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--hz-green); margin-bottom: 3px; }
+  .tl-title { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--white); margin-bottom: 4px; }
+  .tl-body { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  @media(max-width:640px){ .two-col { grid-template-columns: 1fr; } }
+
+  .target-card { display: flex; gap: 14px; align-items: flex-start; background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px; padding: 18px 20px; }
+  .target-badge { width: 42px; height: 42px; border-radius: 50%; background: var(--hz-green-glow); border: 1px solid var(--hz-green-border); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .target-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--white); margin-bottom: 3px; }
+  .target-sub { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+  .rule { height: 1px; background: rgba(255,255,255,0.07); margin: 28px 0; }
+  .platform-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .platform-pill { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+
+  /* CTA */
+  .cta-slide { background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(34,197,94,0.1) 0%, transparent 70%), var(--hz-black); text-align: center; }
+  .cta-title { font-size: clamp(38px, 6vw, 78px); font-weight: 900; text-transform: uppercase; letter-spacing: -2px; line-height: 1; }
+  .cta-title .g { color: var(--hz-green); }
+  .cta-sub { font-size: 16px; color: var(--gray); max-width: 500px; margin: 20px auto 32px; line-height: 1.7; }
+  .cta-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-link { padding: 12px 28px; border-radius: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: opacity 0.15s; }
+  .cta-link.primary { background: var(--hz-green); color: var(--hz-black); }
+  .cta-link.secondary { border: 1px solid var(--hz-green-border); color: var(--hz-green); }
+  .cta-link:hover { opacity: 0.8; }
+  .scroll-hint { text-align: center; padding: 20px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.12); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">HAZHEART <span>×</span> END OVERDOSE</div>
+  <div class="nav-pills">
+    <button class="nav-pill" onclick="scrollTo({top:0,behavior:'smooth'})">Intro</button>
+    <button class="nav-pill" onclick="document.getElementById('media').scrollIntoView({behavior:'smooth'})">Media</button>
+    <button class="nav-pill" onclick="document.getElementById('collab').scrollIntoView({behavior:'smooth'})">Collab</button>
+    <button class="nav-pill" onclick="document.getElementById('ground').scrollIntoView({behavior:'smooth'})">In-Person</button>
+    <button class="nav-pill" onclick="document.getElementById('political').scrollIntoView({behavior:'smooth'})">Recognition</button>
+    <button class="nav-pill" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Close</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="slide hero-slide">
+  <div class="slide-inner">
+    <div class="eyebrow">Partnership Proposal · 2026</div>
+
+    <!-- Mascots row -->
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:0;margin:0 auto 20px;width:320px;height:160px;position:relative;">
+
+      <!-- Flame Guy -->
+      <div style="animation:flamebob 2.2s ease-in-out infinite;transform-origin:bottom center;">
+        <svg viewBox="0 0 200 230" width="120" height="138" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="48" rx="28" ry="38" fill="#aadd00"/>
+          <ellipse cx="78" cy="55" rx="16" ry="28" fill="#88cc00"/>
+          <ellipse cx="122" cy="52" rx="16" ry="26" fill="#88cc00"/>
+          <ellipse cx="62" cy="65" rx="12" ry="20" fill="#66aa00"/>
+          <ellipse cx="138" cy="62" rx="12" ry="20" fill="#66aa00"/>
+          <ellipse cx="100" cy="42" rx="18" ry="28" fill="#ccee22"/>
+          <ellipse cx="86" cy="48" rx="10" ry="18" fill="#ddff33"/>
+          <ellipse cx="114" cy="46" rx="10" ry="18" fill="#ddff33"/>
+          <ellipse cx="100" cy="130" rx="52" ry="55" fill="#55aa00"/>
+          <ellipse cx="100" cy="118" rx="50" ry="48" fill="#66bb00"/>
+          <ellipse cx="88" cy="105" rx="14" ry="10" fill="#88dd22" opacity="0.5"/>
+          <ellipse cx="82" cy="118" rx="14" ry="14" fill="#1a1a1a"/>
+          <ellipse cx="118" cy="118" rx="14" ry="14" fill="#1a1a1a"/>
+          <path d="M68 106 Q82 99 96 106" stroke="#1a1a1a" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M104 106 Q118 99 132 106" stroke="#1a1a1a" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M97 128 L103 128 L100 134Z" fill="#1a1a1a" opacity="0.6"/>
+          <rect x="72" y="148" width="56" height="18" rx="4" fill="#dddddd"/>
+          <line x1="88" y1="148" x2="88" y2="166" stroke="#1a1a1a" stroke-width="2"/>
+          <line x1="100" y1="148" x2="100" y2="166" stroke="#1a1a1a" stroke-width="2"/>
+          <line x1="112" y1="148" x2="112" y2="166" stroke="#1a1a1a" stroke-width="2"/>
+          <path d="M97 88 C97 85 100 83 100 86 C100 83 103 85 103 88 C103 91 100 94 100 94 C100 94 97 91 97 88Z" fill="#22c55e" opacity="0.8"/>
+          <rect x="34" y="148" width="18" height="40" rx="8" fill="#55aa00"/>
+          <rect x="36" y="118" width="14" height="36" rx="7" fill="#55aa00"/>
+          <rect x="39" y="108" width="10" height="24" rx="5" fill="#66bb00"/>
+          <rect x="148" y="148" width="18" height="40" rx="8" fill="#55aa00"/>
+          <rect x="148" y="130" width="14" height="30" rx="7" fill="#55aa00"/>
+          <rect x="76" y="175" width="20" height="30" rx="6" fill="#44aa00"/>
+          <rect x="104" y="175" width="20" height="30" rx="6" fill="#44aa00"/>
+          <ellipse cx="86" cy="207" rx="18" ry="9" fill="#ccdd00"/>
+          <ellipse cx="114" cy="207" rx="18" ry="9" fill="#ccdd00"/>
+          <circle cx="80" cy="204" r="2" fill="#aabb00"/>
+          <circle cx="87" cy="202" r="2" fill="#aabb00"/>
+          <circle cx="94" cy="204" r="2" fill="#aabb00"/>
+          <circle cx="108" cy="204" r="2" fill="#aabb00"/>
+          <circle cx="115" cy="202" r="2" fill="#aabb00"/>
+          <circle cx="122" cy="204" r="2" fill="#aabb00"/>
+        </svg>
+      </div>
+
+      <!-- Narcat pixel art SVG riding naloxone -->
+      <div style="animation:narcatbob 2.2s ease-in-out infinite;animation-delay:0.4s;transform-origin:bottom center;margin-left:-10px;margin-bottom:8px;">
+        <svg viewBox="0 0 100 90" width="130" height="117" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <!-- naloxone injector body -->
+          <rect x="8" y="58" width="76" height="14" rx="7" fill="#c8d8e8"/>
+          <rect x="8" y="60" width="76" height="10" rx="5" fill="#ddeeff"/>
+          <rect x="6" y="61" width="12" height="8" rx="3" fill="#aabbcc"/>
+          <rect x="78" y="63" width="16" height="4" rx="2" fill="#99aabb"/>
+          <!-- plunger end cap -->
+          <rect x="2" y="59" width="8" height="12" rx="3" fill="#bbccdd"/>
+          <!-- label stripe -->
+          <rect x="24" y="61" width="36" height="10" rx="2" fill="#fff" opacity="0.5"/>
+          <rect x="26" y="64" width="32" height="4" rx="1" fill="#22c55e" opacity="0.7"/>
+
+          <!-- narcat body (pixel-style) -->
+          <!-- body -->
+          <rect x="34" y="26" width="32" height="28" rx="4" fill="#f0f0f0"/>
+          <!-- belly -->
+          <rect x="38" y="32" width="24" height="18" rx="3" fill="#fff"/>
+          <!-- head -->
+          <rect x="30" y="8" width="40" height="30" rx="8" fill="#f0f0f0"/>
+          <!-- ears -->
+          <rect x="30" y="4" width="10" height="14" rx="3" fill="#f0f0f0"/>
+          <rect x="60" y="4" width="10" height="14" rx="3" fill="#f0f0f0"/>
+          <!-- inner ears -->
+          <rect x="32" y="6" width="6" height="8" rx="2" fill="#ffb3b3"/>
+          <rect x="62" y="6" width="6" height="8" rx="2" fill="#ffb3b3"/>
+          <!-- eyes -->
+          <rect x="36" y="16" width="8" height="8" rx="2" fill="#1a1a1a"/>
+          <rect x="56" y="16" width="8" height="8" rx="2" fill="#1a1a1a"/>
+          <!-- eye shine -->
+          <rect x="38" y="17" width="3" height="3" fill="#fff"/>
+          <rect x="58" y="17" width="3" height="3" fill="#fff"/>
+          <!-- nose -->
+          <rect x="47" y="26" width="6" height="4" rx="2" fill="#ffb3b3"/>
+          <!-- mouth -->
+          <rect x="44" y="30" width="3" height="2" fill="#cc8888"/>
+          <rect x="53" y="30" width="3" height="2" fill="#cc8888"/>
+          <!-- collar -->
+          <rect x="34" y="36" width="32" height="5" rx="2" fill="#cc2222"/>
+          <!-- collar bell -->
+          <rect x="48" y="39" width="4" height="4" rx="2" fill="#eab308"/>
+          <!-- legs straddling injector -->
+          <rect x="30" y="50" width="10" height="14" rx="3" fill="#f0f0f0"/>
+          <rect x="60" y="50" width="10" height="14" rx="3" fill="#f0f0f0"/>
+          <!-- paws -->
+          <rect x="28" y="62" width="14" height="6" rx="3" fill="#f0f0f0"/>
+          <rect x="58" y="62" width="14" height="6" rx="3" fill="#f0f0f0"/>
+          <!-- tail -->
+          <rect x="72" y="42" width="6" height="20" rx="3" fill="#f0f0f0"/>
+          <rect x="76" y="36" width="6" height="12" rx="3" fill="#f0f0f0"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <style>
+      @keyframes flamebob {
+        0%,100% { transform: translateY(0px) rotate(-1deg); }
+        50% { transform: translateY(-8px) rotate(1deg); }
+      }
+      @keyframes narcatbob {
+        0%,100% { transform: translateY(0px) rotate(1deg); }
+        50% { transform: translateY(-10px) rotate(-1deg); }
+      }
+    </style>
+
+    <div class="hero-title">Save Lives.<br><span class="g">Through Culture.</span></div>
+    <div class="hero-sub">End Overdose × Hazheart — bringing naloxone training, overdose prevention, and public health education directly into the communities that need it most.</div>
+    <div class="divider"></div>
+    <div class="presenter">Presented by Theo Krzywicki · endoverdose.net</div>
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-num">3.4M+</div><div class="stat-label">People reached</div></div>
+      <div class="stat-item"><div class="stat-num">230K+</div><div class="stat-label">Trained in 2024</div></div>
+      <div class="stat-item"><div class="stat-num">241K</div><div class="stat-label">Naloxone doses</div></div>
+      <div class="stat-item"><div class="stat-num">1,050</div><div class="stat-label">Events</div></div>
+      <div class="stat-item"><div class="stat-num">27</div><div class="stat-label">States</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CREATIVE THEMES -->
+<section class="slide" id="themes">
+  <div class="slide-inner">
+    <span class="section-tag">Creative Direction</span>
+    <div class="slide-title">Content <span class="g">Themes & Tone</span></div>
+    <div class="slide-sub">Hazheart's brand has range — playful, aggressive, and provocative. End Overdose content should live in that same space. Life-saving messages don't have to be sterile.</div>
+
+    <!-- mascot pair -->
+    <div style="display:flex;gap:24px;align-items:stretch;margin-bottom:20px;flex-wrap:wrap;">
+
+      <!-- Clown Girl card -->
+      <div style="flex:1;min-width:260px;background:var(--panel);border:1px solid var(--hz-green-border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:var(--hz-dark);display:flex;align-items:center;justify-content:center;padding:20px 0;min-height:200px;">
+          <!-- Clown Girl SVG — glamorous influencer style -->
+          <svg viewBox="0 0 160 210" width="120" height="158" xmlns="http://www.w3.org/2000/svg">
+            <!-- bg oval glow -->
+            <ellipse cx="80" cy="105" rx="70" ry="85" fill="#061800"/>
+            <ellipse cx="80" cy="105" rx="60" ry="74" fill="#0a2400"/>
+            <ellipse cx="80" cy="105" rx="52" ry="66" fill="none" stroke="#22c55e" stroke-width="1.2" opacity="0.5"/>
+            <ellipse cx="80" cy="105" rx="42" ry="55" fill="none" stroke="#88ff00" stroke-width="0.6" opacity="0.25"/>
+
+            <!-- long flowing dark hair behind body -->
+            <path d="M30 70 Q14 130 20 185 Q28 198 36 188 Q32 150 44 110 Q52 85 46 68Z" fill="#0f0800"/>
+            <path d="M130 70 Q146 130 140 185 Q132 198 124 188 Q128 150 116 110 Q108 85 114 68Z" fill="#0f0800"/>
+            <!-- green hair streaks in tails -->
+            <path d="M34 80 Q22 130 26 175" stroke="#44cc00" stroke-width="2.5" fill="none" opacity="0.7" stroke-linecap="round"/>
+            <path d="M126 80 Q138 130 134 175" stroke="#44cc00" stroke-width="2.5" fill="none" opacity="0.7" stroke-linecap="round"/>
+
+            <!-- hair top volume -->
+            <ellipse cx="80" cy="58" rx="44" ry="42" fill="#120900"/>
+            <!-- inner hair shine -->
+            <path d="M54 40 Q80 30 106 40" stroke="#2a1a00" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+            <!-- green bows — large and stylish -->
+            <path d="M38 52 Q48 44 50 56 Q48 60 38 58 Q30 56 38 52Z" fill="#22c55e"/>
+            <path d="M50 56 Q54 50 60 54 Q56 62 50 60 Q46 58 50 56Z" fill="#33dd66"/>
+            <circle cx="50" cy="56" r="4" fill="#11aa44"/>
+            <path d="M122 52 Q112 44 110 56 Q112 60 122 58 Q130 56 122 52Z" fill="#22c55e"/>
+            <path d="M110 56 Q106 50 100 54 Q104 62 110 60 Q114 58 110 56Z" fill="#33dd66"/>
+            <circle cx="110" cy="56" r="4" fill="#11aa44"/>
+
+            <!-- face — sharp jawline, model proportions -->
+            <path d="M50 78 Q48 110 52 128 Q62 148 80 152 Q98 148 108 128 Q112 110 110 78 Q100 58 80 56 Q60 58 50 78Z" fill="#d4956a"/>
+            <!-- face shading -->
+            <path d="M50 78 Q48 100 52 120" stroke="#b87848" stroke-width="2" fill="none" opacity="0.4"/>
+            <path d="M110 78 Q112 100 108 120" stroke="#b87848" stroke-width="2" fill="none" opacity="0.4"/>
+
+            <!-- dramatic eye makeup — left -->
+            <path d="M54 84 Q64 78 76 82 Q72 92 60 90 Q54 88 54 84Z" fill="#1a0a00"/>
+            <!-- extended cat-eye liner left -->
+            <path d="M54 84 Q50 80 48 76" stroke="#1a0a00" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- iris left -->
+            <ellipse cx="65" cy="86" rx="7" ry="7.5" fill="#cc9900"/>
+            <ellipse cx="65" cy="86" rx="3.5" ry="6" fill="#111"/>
+            <circle cx="67" cy="84" r="2" fill="#fff"/>
+            <!-- lashes left -->
+            <path d="M54 84 Q52 80 50 77" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M57 82 Q55 77 54 74" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M61 80 Q60 75 60 72" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M66 80 Q66 75 67 72" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M71 81 Q72 76 74 74" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M75 83 Q77 79 80 77" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+            <!-- dramatic eye makeup — right -->
+            <path d="M106 84 Q96 78 84 82 Q88 92 100 90 Q106 88 106 84Z" fill="#1a0a00"/>
+            <path d="M106 84 Q110 80 112 76" stroke="#1a0a00" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="95" cy="86" rx="7" ry="7.5" fill="#cc9900"/>
+            <ellipse cx="95" cy="86" rx="3.5" ry="6" fill="#111"/>
+            <circle cx="97" cy="84" r="2" fill="#fff"/>
+            <path d="M106 84 Q108 80 110 77" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M103 82 Q105 77 106 74" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M99 80 Q100 75 100 72" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M94 80 Q94 75 93 72" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M89 81 Q88 76 86 74" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M85 83 Q83 79 80 77" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+            <!-- blush -->
+            <ellipse cx="58" cy="102" rx="10" ry="6" fill="#e8704a" opacity="0.35"/>
+            <ellipse cx="102" cy="102" rx="10" ry="6" fill="#e8704a" opacity="0.35"/>
+
+            <!-- face tattoo star marks -->
+            <path d="M52 95 L54 92 L56 95 L53 97 L57 97" stroke="#cc3333" stroke-width="1" fill="none" stroke-linejoin="round"/>
+            <path d="M108 95 L106 92 L104 95 L107 97 L103 97" stroke="#cc3333" stroke-width="1" fill="none" stroke-linejoin="round"/>
+
+            <!-- cute nose -->
+            <path d="M77 108 Q80 112 83 108" stroke="#b87848" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- nostrils -->
+            <ellipse cx="76" cy="109" rx="2" ry="1.5" fill="#b07040" opacity="0.6"/>
+            <ellipse cx="84" cy="109" rx="2" ry="1.5" fill="#b07040" opacity="0.6"/>
+
+            <!-- glossy lips — full -->
+            <path d="M66 118 Q72 114 80 116 Q88 114 94 118 Q88 128 80 130 Q72 128 66 118Z" fill="#cc2244"/>
+            <!-- cupid's bow -->
+            <path d="M66 118 Q73 115 80 116 Q87 115 94 118" stroke="#991133" stroke-width="1" fill="none"/>
+            <!-- lip shine -->
+            <ellipse cx="76" cy="121" rx="5" ry="2.5" fill="#ff6688" opacity="0.5"/>
+
+            <!-- neck -->
+            <rect x="72" y="150" width="16" height="16" rx="4" fill="#c88860"/>
+
+            <!-- glam corset / bodysuit top -->
+            <path d="M40 168 Q44 148 58 142 Q68 136 80 134 Q92 136 102 142 Q116 148 120 168 Q106 184 80 186 Q54 184 40 168Z" fill="#111"/>
+            <!-- corset lacing detail -->
+            <line x1="80" y1="136" x2="80" y2="184" stroke="#22c55e" stroke-width="1" opacity="0.5"/>
+            <line x1="72" y1="140" x2="76" y2="148" stroke="#22c55e" stroke-width="1" opacity="0.4"/>
+            <line x1="88" y1="140" x2="84" y2="148" stroke="#22c55e" stroke-width="1" opacity="0.4"/>
+            <line x1="68" y1="150" x2="74" y2="158" stroke="#22c55e" stroke-width="1" opacity="0.4"/>
+            <line x1="92" y1="150" x2="86" y2="158" stroke="#22c55e" stroke-width="1" opacity="0.4"/>
+            <!-- bust shape over corset -->
+            <path d="M48 162 Q56 142 72 138 Q80 135 80 138 Q80 135 88 138 Q104 142 112 162" stroke="#222" stroke-width="1" fill="none"/>
+
+            <!-- green bow choker at neck -->
+            <rect x="68" y="148" width="24" height="6" rx="3" fill="#22c55e"/>
+            <path d="M68 148 Q72 143 76 148" fill="#33dd55"/>
+            <path d="M92 148 Q88 143 84 148" fill="#33dd55"/>
+            <circle cx="80" cy="151" r="3" fill="#11aa33"/>
+
+            <!-- thigh-high stockings peek at bottom -->
+            <rect x="54" y="184" width="20" height="18" rx="5" fill="#111"/>
+            <rect x="86" y="184" width="20" height="18" rx="5" fill="#111"/>
+            <rect x="54" y="186" width="20" height="3" fill="#44cc00" opacity="0.8"/>
+            <rect x="54" y="193" width="20" height="3" fill="#44cc00" opacity="0.8"/>
+            <rect x="86" y="186" width="20" height="3" fill="#44cc00" opacity="0.8"/>
+            <rect x="86" y="193" width="20" height="3" fill="#44cc00" opacity="0.8"/>
+
+            <!-- HAZHEART label bar -->
+            <rect x="14" y="196" width="132" height="11" rx="3" fill="#0a1a00"/>
+            <text x="80" y="204" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="9" fill="#aaff00" letter-spacing="2.5">HAZHEART</text>
+          </svg>
+        </div>
+        <div style="padding:18px 20px;flex:1;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--hz-green);margin-bottom:6px;">Theme 01</div>
+          <div style="font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:8px;">Suggestive & Fun</div>
+          <div style="font-size:13px;color:var(--gray);line-height:1.65;">PSA content that makes people stop scrolling — personality-forward and unafraid to use Hazheart's existing aesthetic to pull people in before delivering the message.</div>
+          <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="tag">Lil Aaron PSA</span>
+            <span class="tag">Social clips</span>
+            <span class="tag">In-store content</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flame Guy card -->
+      <div style="flex:1;min-width:260px;background:var(--panel);border:1px solid var(--hz-green-border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:var(--hz-dark);display:flex;align-items:center;justify-content:center;padding:20px 0;min-height:200px;">
+          <!-- Flame Guy SVG (matches sticker closely) -->
+          <svg viewBox="0 0 200 240" width="130" height="156" xmlns="http://www.w3.org/2000/svg">
+            <!-- flames back layer -->
+            <ellipse cx="100" cy="44" rx="32" ry="42" fill="#4a8a00"/>
+            <ellipse cx="72" cy="54" rx="18" ry="32" fill="#3a7200"/>
+            <ellipse cx="128" cy="52" rx="18" ry="30" fill="#3a7200"/>
+            <ellipse cx="56" cy="68" rx="13" ry="22" fill="#2a5a00"/>
+            <ellipse cx="144" cy="66" rx="13" ry="22" fill="#2a5a00"/>
+            <!-- flames mid layer -->
+            <ellipse cx="100" cy="38" rx="24" ry="34" fill="#88cc00"/>
+            <ellipse cx="80" cy="46" rx="14" ry="24" fill="#99dd00"/>
+            <ellipse cx="120" cy="44" rx="14" ry="22" fill="#99dd00"/>
+            <!-- flames top bright -->
+            <ellipse cx="100" cy="30" rx="16" ry="26" fill="#ccff00"/>
+            <ellipse cx="90" cy="34" rx="9" ry="16" fill="#ddff44"/>
+            <ellipse cx="110" cy="32" rx="9" ry="16" fill="#ddff44"/>
+            <!-- skull head -->
+            <ellipse cx="100" cy="128" rx="54" ry="58" fill="#3a7a00"/>
+            <ellipse cx="100" cy="116" rx="52" ry="50" fill="#55aa00"/>
+            <!-- skull highlight -->
+            <ellipse cx="82" cy="100" rx="18" ry="12" fill="#88cc22" opacity="0.45"/>
+            <!-- dark outline rim -->
+            <ellipse cx="100" cy="118" rx="52" ry="50" fill="none" stroke="#1a3a00" stroke-width="3"/>
+            <!-- eye sockets -->
+            <ellipse cx="80" cy="118" rx="16" ry="17" fill="#111"/>
+            <ellipse cx="120" cy="118" rx="16" ry="17" fill="#111"/>
+            <!-- angry brow lines -->
+            <path d="M62 104 Q80 95 98 104" stroke="#1a3a00" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M102 104 Q120 95 138 104" stroke="#1a3a00" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <!-- cheek bones -->
+            <ellipse cx="64" cy="134" rx="10" ry="7" fill="#44aa00" opacity="0.6"/>
+            <ellipse cx="136" cy="134" rx="10" ry="7" fill="#44aa00" opacity="0.6"/>
+            <!-- nose holes -->
+            <ellipse cx="94" cy="132" rx="5" ry="7" fill="#1a3a00"/>
+            <ellipse cx="106" cy="132" rx="5" ry="7" fill="#1a3a00"/>
+            <!-- big buck teeth -->
+            <rect x="74" y="148" width="52" height="22" rx="6" fill="#eeeecc"/>
+            <line x1="100" y1="148" x2="100" y2="170" stroke="#aaaaaa" stroke-width="2.5"/>
+            <line x1="87" y1="148" x2="87" y2="170" stroke="#bbbbaa" stroke-width="1.5"/>
+            <line x1="113" y1="148" x2="113" y2="170" stroke="#bbbbaa" stroke-width="1.5"/>
+            <!-- heart on forehead -->
+            <path d="M96 82 C96 78 100 76 100 80 C100 76 104 78 104 82 C104 87 100 91 100 91 C100 91 96 87 96 82Z" fill="#22c55e"/>
+            <!-- LEFT ARM — middle finger up -->
+            <rect x="28" y="130" width="22" height="50" rx="10" fill="#44aa00" stroke="#1a3a00" stroke-width="1.5"/>
+            <!-- hand -->
+            <rect x="28" y="108" width="20" height="30" rx="9" fill="#55bb00" stroke="#1a3a00" stroke-width="1.5"/>
+            <!-- middle finger extended -->
+            <rect x="32" y="88" width="13" height="28" rx="6" fill="#66cc00" stroke="#1a3a00" stroke-width="1.5"/>
+            <!-- other fingers curled -->
+            <rect x="29" y="110" width="7" height="14" rx="4" fill="#44aa00"/>
+            <rect x="42" y="110" width="7" height="14" rx="4" fill="#44aa00"/>
+            <!-- RIGHT ARM — down/relaxed -->
+            <rect x="150" y="130" width="22" height="50" rx="10" fill="#44aa00" stroke="#1a3a00" stroke-width="1.5"/>
+            <rect x="152" y="160" width="20" height="28" rx="9" fill="#55bb00" stroke="#1a3a00" stroke-width="1.5"/>
+            <!-- LEGS -->
+            <rect x="72" y="178" width="24" height="36" rx="8" fill="#3a8800" stroke="#1a3a00" stroke-width="1.5"/>
+            <rect x="104" y="178" width="24" height="36" rx="8" fill="#3a8800" stroke="#1a3a00" stroke-width="1.5"/>
+            <!-- CROCS (yellow) -->
+            <ellipse cx="84" cy="216" rx="22" ry="11" fill="#ddcc00" stroke="#aa9900" stroke-width="1.5"/>
+            <ellipse cx="116" cy="216" rx="22" ry="11" fill="#ddcc00" stroke="#aa9900" stroke-width="1.5"/>
+            <!-- croc holes -->
+            <circle cx="76" cy="212" r="2.5" fill="#bbaa00"/>
+            <circle cx="84" cy="210" r="2.5" fill="#bbaa00"/>
+            <circle cx="92" cy="212" r="2.5" fill="#bbaa00"/>
+            <circle cx="108" cy="212" r="2.5" fill="#bbaa00"/>
+            <circle cx="116" cy="210" r="2.5" fill="#bbaa00"/>
+            <circle cx="124" cy="212" r="2.5" fill="#bbaa00"/>
+          </svg>
+        </div>
+        <div style="padding:18px 20px;flex:1;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--hz-green);margin-bottom:6px;">Theme 02</div>
+          <div style="font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:8px;">Aggressive & Edgy</div>
+          <div style="font-size:13px;color:var(--gray);line-height:1.65;">The Flame Guy energy — direct and in-your-face. Content that treats the overdose crisis with the urgency it deserves and doesn't soften the message for comfort. Can be fun and use people who are socially relevant.</div>
+          <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="tag">End Overdose Live</span>
+            <span class="tag">Festival booth</span>
+            <span class="tag">PSA openers</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Third theme card -->
+      <div style="flex:1;min-width:260px;background:var(--hz-green-glow);border:1px solid var(--hz-green-border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:var(--hz-dark);display:flex;align-items:center;justify-content:center;padding:20px 0;min-height:200px;">
+          <svg viewBox="0 0 160 180" width="120" height="135" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+            <!-- narcat riding naloxone, larger -->
+            <rect x="10" y="110" width="140" height="26" rx="13" fill="#c8d8e8"/>
+            <rect x="10" y="113" width="140" height="20" rx="10" fill="#ddeeff"/>
+            <rect x="8" y="115" width="22" height="16" rx="6" fill="#aabbcc"/>
+            <rect x="138" y="118" width="18" height="8" rx="4" fill="#99aabb"/>
+            <rect x="2" y="113" width="12" height="22" rx="5" fill="#bbccdd"/>
+            <rect x="46" y="116" width="60" height="18" rx="3" fill="#fff" opacity="0.5"/>
+            <rect x="50" y="121" width="52" height="8" rx="2" fill="#22c55e" opacity="0.7"/>
+            <!-- body -->
+            <rect x="54" y="52" width="52" height="48" rx="6" fill="#f0f0f0"/>
+            <rect x="60" y="62" width="40" height="32" rx="5" fill="#fff"/>
+            <!-- head -->
+            <rect x="48" y="16" width="64" height="50" rx="12" fill="#f0f0f0"/>
+            <!-- ears -->
+            <rect x="48" y="8" width="18" height="24" rx="5" fill="#f0f0f0"/>
+            <rect x="94" y="8" width="18" height="24" rx="5" fill="#f0f0f0"/>
+            <rect x="52" y="11" width="10" height="14" rx="3" fill="#ffb3b3"/>
+            <rect x="98" y="11" width="10" height="14" rx="3" fill="#ffb3b3"/>
+            <!-- eyes -->
+            <rect x="56" y="28" width="14" height="14" rx="3" fill="#1a1a1a"/>
+            <rect x="90" y="28" width="14" height="14" rx="3" fill="#1a1a1a"/>
+            <rect x="59" y="30" width="5" height="5" fill="#fff"/>
+            <rect x="93" y="30" width="5" height="5" fill="#fff"/>
+            <!-- nose -->
+            <rect x="76" y="46" width="8" height="6" rx="3" fill="#ffb3b3"/>
+            <!-- collar -->
+            <rect x="54" y="64" width="52" height="8" rx="3" fill="#cc2222"/>
+            <rect x="76" y="70" width="8" height="8" rx="4" fill="#eab308"/>
+            <!-- legs -->
+            <rect x="46" y="92" width="18" height="26" rx="5" fill="#f0f0f0"/>
+            <rect x="96" y="92" width="18" height="26" rx="5" fill="#f0f0f0"/>
+            <rect x="44" y="114" width="22" height="10" rx="5" fill="#f0f0f0"/>
+            <rect x="94" y="114" width="22" height="10" rx="5" fill="#f0f0f0"/>
+            <!-- tail -->
+            <rect x="114" y="76" width="10" height="34" rx="5" fill="#f0f0f0"/>
+            <rect x="120" y="62" width="10" height="22" rx="5" fill="#f0f0f0"/>
+          </svg>
+        </div>
+        <div style="padding:18px 20px;flex:1;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--hz-green);margin-bottom:6px;">Theme 03</div>
+          <div style="font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:8px;">Playful & Earnest</div>
+          <div style="font-size:13px;color:var(--gray);line-height:1.65;">The Narcat lane — warm, gamified, genuinely fun. Content that sneaks education into entertainment. Narcats World, animated intros, in-store kiosk moments. No preachiness, just vibes and life-saving info — think Towelie but opioids.</div>
+          <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="tag">Narcats World</span>
+            <span class="tag">Claw machine</span>
+            <span class="tag">Animated PSA intros</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card" style="padding:18px 22px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--hz-green);margin-bottom:6px;">The guiding principle</div>
+      <div style="font-size:14px;color:var(--gray);line-height:1.7;">Good content doesn't have to choose between entertaining and life-saving. Hazheart's audience responds to authenticity and edge — not sanitized public health messaging. Every piece we make together should feel like it belongs in the Hazheart universe first, and carry the End Overdose message naturally.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="section-tag">The Vision</span>
+    <div class="slide-title">Why <span class="g">Hazheart</span>?</div>
+    <div class="slide-sub">Traditional public health campaigns miss the people most at risk. Hazheart has built real trust with a real audience. That trust is the rarest resource in harm reduction work.</div>
+    <div class="grid-2">
+      <div class="card green">
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Reach the unreachable</div>
+        <div class="card-body">People who tune out government PSAs listen to the brands and artists they love. Hazheart's community already shows up — now we give them something that could save a life.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">📡</span>
+        <div class="card-title">Infrastructure already built</div>
+        <div class="card-body">hazheart.tv, the retail store, a loyal social following, festival presence — the distribution network exists. We bring the mission, the training expertise, and the content.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏪</span>
+        <div class="card-title">Physical + digital</div>
+        <div class="card-body">In-store game kiosks, a naloxone claw machine, PSA content on shop screens, regular co-branded social posts, and multi-format video clipping across every channel.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏅</span>
+        <div class="card-title">Civic credibility</div>
+        <div class="card-body">Document the impact, then pursue official recognition from LA City Council, the California State Legislature, and federal Congress — turning culture into institutional legacy.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEDIA FORMATS -->
+<section class="slide" id="media">
+  <div class="slide-inner">
+    <span class="section-tag">Content Strategy</span>
+    <div class="slide-title">3 <span class="g">Media Formats</span></div>
+    <div class="slide-sub">Each format targets a different context and audience — entertainment, education, and advocacy — all shot with hazheart.tv running in the background and clipped for every channel.</div>
+    <div class="grid-3" style="margin-bottom:20px">
+
+      <div class="fmt-card">
+        <div class="fmt-header">
+          <div><div class="fmt-num">Format 01</div><div class="fmt-name">Health on<br>Public Health</div></div>
+          <div style="font-size:26px">📞</div>
+        </div>
+        <div class="fmt-body">Loveline-inspired call-in show. Viewers phone in with drug and health questions. Johnny from HEALTH hosts alongside a public health professional who delivers verified answers. hazheart.tv streams in the background, grounding the content in the brand.</div>
+        <div class="fmt-tags">
+          <span class="tag">Live call-in</span>
+          <span class="tag">hazheart.tv bg</span>
+          <span class="tag">YouTube</span>
+          <span class="tag">IG / TikTok</span>
+        </div>
+      </div>
+
+      <div class="fmt-card">
+        <div class="fmt-header">
+          <div><div class="fmt-num">Format 02</div><div class="fmt-name">End Overdose<br>Live</div></div>
+          <div style="font-size:26px">🎙️</div>
+        </div>
+        <div class="fmt-body">10–30 min long-form interview shot in the Hazheart studio with hazheart.tv visible in the background. End Overdose host quizzes influencers, artists, doctors, nurses, and EMS professionals. Streamed live, archived on YouTube, clipped for social.</div>
+        <div class="fmt-tags">
+          <span class="tag">Long-form</span>
+          <span class="tag">Studio</span>
+          <span class="tag">hazheart.tv bg</span>
+          <span class="tag">Guest-driven</span>
+        </div>
+      </div>
+
+      <div class="fmt-card">
+        <div class="fmt-header">
+          <div><div class="fmt-num">Format 03</div><div class="fmt-name">Lil Aaron<br>PSA</div></div>
+          <div style="font-size:26px">📢</div>
+        </div>
+        <div class="fmt-body">1–2 min public service announcements covering overdose response and naloxone training. Lil Aaron's chaotic energy meets real public health content. Opens with a branded Narcat + Flame Guy animation. Loops in-store and shared across social.</div>
+        <div class="fmt-tags">
+          <span class="tag">Short-form</span>
+          <span class="tag">In-store loop</span>
+          <span class="tag">Animated intro</span>
+          <span class="tag">TikTok / IG</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="rule"></div>
+    <div style="font-size:10px;color:var(--gray-dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">All content distributed across</div>
+    <div class="platform-row">
+      <span class="platform-pill">hazheart.tv</span>
+      <span class="platform-pill">YouTube</span>
+      <span class="platform-pill">Instagram</span>
+      <span class="platform-pill">TikTok</span>
+      <span class="platform-pill">In-store screens</span>
+      <span class="platform-pill">Podcast feeds</span>
+    </div>
+  </div>
+</section>
+
+<!-- COLLAB & SOCIAL -->
+<section class="slide" id="collab">
+  <div class="slide-inner">
+    <span class="section-tag">Social Collaboration</span>
+    <div class="slide-title"><span class="g">Hazheart.tv</span> Integration</div>
+    <div class="slide-sub">hazheart.tv isn't just a platform — it's a visual identity. We want it present in every piece of content we make together, and a steady drumbeat of co-branded posts to keep the message alive.</div>
+
+    <div class="collab-grid">
+      <div class="cadence-pill" style="display:flex">
+        <div class="num">2x</div>
+        <div class="lbl"><strong style="color:var(--white);font-size:13px">per month</strong><br>Co-branded collab post<br>on Hazheart social</div>
+      </div>
+      <div class="cadence-pill" style="display:flex">
+        <div class="num" style="font-size:16px;padding-top:2px">📺</div>
+        <div class="lbl"><strong style="color:var(--white);font-size:13px">Every shoot</strong><br>hazheart.tv visible<br>in the background</div>
+      </div>
+    </div>
+
+    <div class="collab-grid">
+      <div class="card green">
+        <span class="card-icon">📅</span>
+        <div class="card-title">Bi-weekly collab posts</div>
+        <div class="card-body">Once every two weeks, Hazheart posts co-branded End Overdose content — could be a PSA clip, a training reminder, a naloxone kit giveaway call-to-action, or a behind-the-scenes from a shoot. Keeps harm reduction top-of-mind for the Hazheart audience without overwhelming the feed.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">📺</span>
+        <div class="card-title">hazheart.tv in every frame</div>
+        <div class="card-body">Whether it's the Lil Aaron PSA, an End Overdose Live interview, or a Health on Public Health call-in — hazheart.tv plays visibly in the background. It ties every piece of End Overdose content to the Hazheart brand organically, without forced placement.</div>
+      </div>
+      <div class="card collab-big">
+        <span class="card-icon">🐱</span>
+        <div class="card-title">Narcats World — the game</div>
+        <div class="card-body" style="margin-bottom:12px">Narcats World is End Overdose's free online game — an approachable, fun entry point into harm reduction education. Featuring the Narcat character that already lives in the Hazheart universe, it's a natural bridge between gaming culture, the Hazheart store, and life-saving information.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <a href="https://endoverdose.net/narcatsworld/" target="_blank" style="display:inline-block;background:var(--hz-green);color:var(--hz-black);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;border-radius:4px;text-decoration:none;">Play Narcats World ↗</a>
+          <span style="font-size:12px;color:var(--gray-dim)">endoverdose.net/narcatsworld</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IN-PERSON -->
+<section class="slide" id="ground">
+  <div class="slide-inner">
+    <span class="section-tag">On the Ground</span>
+    <div class="slide-title"><span class="g">In-Store</span> Presence</div>
+    <div class="slide-sub">A permanent End Overdose presence inside the Hazheart store — interactive, branded, and impossible to walk past without engaging.</div>
+
+    <div class="grid-2" style="margin-bottom:14px">
+
+      <!-- CLAW MACHINE -->
+      <div class="claw-vis">
+        <svg viewBox="0 0 220 240" width="180" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 16px">
+          <!-- machine body -->
+          <rect x="30" y="60" width="160" height="160" rx="8" fill="#0d3d1e" stroke="#22c55e" stroke-width="1.5"/>
+          <!-- glass window -->
+          <rect x="44" y="74" width="132" height="100" rx="5" fill="rgba(34,197,94,0.07)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+          <!-- naloxone kit bags inside -->
+          <rect x="60" y="120" width="28" height="38" rx="3" fill="#22c55e" opacity="0.85"/>
+          <text x="74" y="133" text-anchor="middle" font-size="6" font-weight="700" fill="#071a0f" font-family="Arial">HAZ</text>
+          <text x="74" y="142" text-anchor="middle" font-size="5" fill="#071a0f" font-family="Arial">NALOXONE</text>
+          <text x="74" y="151" text-anchor="middle" font-size="5" fill="#071a0f" font-family="Arial">KIT</text>
+          <rect x="96" y="128" width="28" height="38" rx="3" fill="#22c55e" opacity="0.7"/>
+          <text x="110" y="141" text-anchor="middle" font-size="6" font-weight="700" fill="#071a0f" font-family="Arial">HAZ</text>
+          <text x="110" y="150" text-anchor="middle" font-size="5" fill="#071a0f" font-family="Arial">KIT</text>
+          <rect x="132" y="120" width="28" height="38" rx="3" fill="#22c55e" opacity="0.6"/>
+          <text x="146" y="133" text-anchor="middle" font-size="6" font-weight="700" fill="#071a0f" font-family="Arial">HAZ</text>
+          <text x="146" y="142" text-anchor="middle" font-size="5" fill="#071a0f" font-family="Arial">KIT</text>
+          <!-- narcat figure -->
+          <circle cx="96" cy="108" r="10" fill="#22c55e" opacity="0.9"/>
+          <circle cx="93" cy="106" r="1.5" fill="#071a0f"/>
+          <circle cx="99" cy="106" r="1.5" fill="#071a0f"/>
+          <path d="M93 111 Q96 113 99 111" stroke="#071a0f" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <!-- claw arm -->
+          <line x1="110" y1="74" x2="110" y2="100" stroke="#22c55e" stroke-width="1.5"/>
+          <path d="M103 100 L110 108 L117 100" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- top label -->
+          <rect x="30" y="30" width="160" height="30" rx="5" fill="#22c55e"/>
+          <text x="110" y="41" text-anchor="middle" font-size="8" font-weight="900" fill="#071a0f" font-family="Arial" letter-spacing="2">HAZHEART</text>
+          <text x="110" y="52" text-anchor="middle" font-size="7" font-weight="700" fill="#071a0f" font-family="Arial" letter-spacing="1">× END OVERDOSE</text>
+          <!-- coin slot / buttons -->
+          <rect x="60" y="185" width="50" height="22" rx="4" fill="#0a2e14" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+          <text x="85" y="200" text-anchor="middle" font-size="7" fill="#22c55e" font-family="Arial" letter-spacing="1">PLAY FREE</text>
+          <rect x="120" y="188" width="16" height="16" rx="8" fill="#22c55e" opacity="0.8"/>
+          <rect x="144" y="188" width="16" height="16" rx="8" fill="rgba(34,197,94,0.3)" stroke="#22c55e" stroke-width="1"/>
+        </svg>
+        <div class="card-title" style="margin-bottom:4px">Naloxone Claw Machine</div>
+        <div class="card-body" style="font-size:12px;text-align:center">Play for free — win a branded Hazheart naloxone kit. Every play is a win.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card green">
+          <span class="card-icon">🎮</span>
+          <div class="card-title">Narcats World game kiosk</div>
+          <div class="card-body">A dedicated arcade-style kiosk running Narcats World in-store. Customers play the game, learn about overdose prevention, and unlock free swag. Ties the digital game directly to the physical Hazheart retail experience.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🎁</span>
+          <div class="card-title">Swag for getting educated</div>
+          <div class="card-body">Complete a training or score on the kiosk → receive a 3D-printed Hazheart Narcat or Flame Guy figurine packaged with a naloxone kit. The giveaway is the lesson.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">📺</span>
+          <div class="card-title">PSA content on store screens</div>
+          <div class="card-body">Lil Aaron PSA content loops on Hazheart store screens between music and content — passive, constant harm reduction education for every customer who walks in.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FESTIVAL BOOTH -->
+    <div class="card gold" style="padding:20px 24px">
+      <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+        <div style="font-size:28px">⛺</div>
+        <div>
+          <div class="card-title" style="margin-bottom:5px">Hazheart Festival Booth</div>
+          <div class="card-body">At Hazheart-hosted and -presented events, End Overdose sets up a fully co-branded training booth — Hazheart colors, branded easy-up tent, and table. Free Narcat/Flame Guy figurines packaged with naloxone kits given out to anyone who completes the training. Same proven model End Overdose runs nationally, now wearing Hazheart.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY / OUTREACH -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="section-tag">Public-Facing Outreach</span>
+    <div class="slide-title">Van Nuys <span class="g">Community Map</span></div>
+    <div class="slide-sub">Root the mission in the neighborhood Hazheart calls home. Map the resources, post them publicly, and show the impact at year's end.</div>
+    <div class="two-col">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-phase">Step 1</div>
+          <div class="tl-title">Map every resource in Van Nuys</div>
+          <div class="tl-body">Health clinics, needle exchanges, mental health services, shelters, naloxone distribution sites — all identified and catalogued.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-phase">Step 2</div>
+          <div class="tl-title">Post in-store and online</div>
+          <div class="tl-body">Physical wall display in the Hazheart store + a dedicated page on hazheart.com — a free, living resource directory for the whole community.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-phase">Step 3</div>
+          <div class="tl-title">Annual impact report</div>
+          <div class="tl-body">Year-end report documenting reach, trainings completed, kits distributed, and partnerships formed — fueling grant applications and political recognition.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-phase">Step 4</div>
+          <div class="tl-title">Official recognition campaign</div>
+          <div class="tl-body">Use the documented impact to pursue Certificates of Recognition from LA City Council, California State Legislature, and federal Congress.</div>
+        </div>
+      </div>
+      <div class="card" style="padding:24px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-dim);margin-bottom:16px">End Overdose · 2024 in Numbers</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:var(--hz-green-glow);border:1px solid var(--hz-green-border);border-radius:5px;padding:14px;text-align:center">
+            <div style="font-size:24px;font-weight:900;color:var(--hz-green);letter-spacing:-1px">3.4M</div>
+            <div style="font-size:10px;color:var(--gray-dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px">Reached</div>
+          </div>
+          <div style="background:var(--hz-green-glow);border:1px solid var(--hz-green-border);border-radius:5px;padding:14px;text-align:center">
+            <div style="font-size:24px;font-weight:900;color:var(--hz-green);letter-spacing:-1px">230K</div>
+            <div style="font-size:10px;color:var(--gray-dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px">Trained</div>
+          </div>
+          <div style="background:var(--hz-green-glow);border:1px solid var(--hz-green-border);border-radius:5px;padding:14px;text-align:center">
+            <div style="font-size:24px;font-weight:900;color:var(--hz-green);letter-spacing:-1px">241K</div>
+            <div style="font-size:10px;color:var(--gray-dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px">Naloxone doses</div>
+          </div>
+          <div style="background:var(--hz-green-glow);border:1px solid var(--hz-green-border);border-radius:5px;padding:14px;text-align:center">
+            <div style="font-size:24px;font-weight:900;color:var(--hz-green);letter-spacing:-1px">59K</div>
+            <div style="font-size:10px;color:var(--gray-dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px">Fentanyl strips</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--gray-dim);text-align:center">1,050 events · 27 states</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POLITICAL -->
+<section class="slide" id="political">
+  <div class="slide-inner">
+    <span class="section-tag">Strategic Goals</span>
+    <div class="slide-title">Official <span class="g">Recognition</span></div>
+    <div class="slide-sub">Build the impact record first. Then pursue formal recognition at every level of government — turning Hazheart into a civic institution, not just a brand.</div>
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="target-card">
+        <div class="target-badge">🏙️</div>
+        <div>
+          <div class="target-title">LA City Council, D6</div>
+          <div class="target-sub">Councilmember Imelda Padilla — Van Nuys, North Hollywood, Panorama City</div>
+        </div>
+      </div>
+      <div class="target-card">
+        <div class="target-badge">🏛️</div>
+        <div>
+          <div class="target-title">CA State Legislature</div>
+          <div class="target-sub">Assemblymember Jesse Gabriel, D46 — San Fernando Valley, Assembly Budget Chair</div>
+        </div>
+      </div>
+      <div class="target-card">
+        <div class="target-badge">🇺🇸</div>
+        <div>
+          <div class="target-title">Federal Congress</div>
+          <div class="target-sub">Congressman Brad Sherman, CA-32 — Sherman Oaks / San Fernando Valley</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+
+      <!-- CERT MOCKUP -->
+      <div style="background:#f5f0e8;border-radius:8px;padding:28px 24px;text-align:center;border:3px solid #c8a84b;position:relative;font-family:Georgia,serif;color:#1a1a1a;">
+        <!-- top ornament -->
+        <div style="font-size:11px;letter-spacing:3px;color:#8b6914;text-transform:uppercase;margin-bottom:6px;">✦ ✦ ✦</div>
+        <div style="font-size:15px;font-weight:700;color:#1a3a6b;letter-spacing:1px;margin-bottom:2px;">City of Los Angeles</div>
+        <div style="width:60px;height:1px;background:#c8a84b;margin:6px auto;"></div>
+        <div style="font-size:18px;font-style:italic;color:#1a1a1a;margin-bottom:4px;">Certificate of Recognition</div>
+        <div style="font-size:10px;color:#555;font-style:italic;margin-bottom:10px;">presented to</div>
+        <!-- seal circle -->
+        <div style="width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,#d4a017,#8b6914);border:2px solid #c8a84b;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;">
+          <div style="font-size:8px;color:#fff;font-weight:700;text-align:center;line-height:1.2;">LA<br>SEAL</div>
+        </div>
+        <div style="font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.2;">End Overdose<br>&amp; Hazheart</div>
+        <div style="width:80%;height:1px;background:#c8a84b;margin:8px auto;"></div>
+        <div style="font-size:10px;color:#555;font-style:italic;margin-bottom:6px;">on the occasion of</div>
+        <div style="font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:10px;">Community Harm Reduction &amp;<br>Overdose Prevention Leadership</div>
+        <div style="font-size:9px;color:#444;line-height:1.6;margin-bottom:10px;font-style:italic;">As Mayor of Los Angeles, and on behalf of its residents, I extend sincere appreciation for outstanding and invaluable contributions to the Van Nuys community and the City of Los Angeles.</div>
+        <!-- ribbon + signature row -->
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:8px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+            <div style="width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,#d4a017,#8b6914);border:1.5px solid #c8a84b;display:flex;align-items:center;justify-content:center;">
+              <div style="font-size:6px;color:#fff;font-weight:700;">★</div>
+            </div>
+            <div style="display:flex;gap:2px;margin-top:2px;">
+              <div style="width:5px;height:20px;background:#22c55e;border-radius:1px;"></div>
+              <div style="width:5px;height:20px;background:#eab308;border-radius:1px;"></div>
+              <div style="width:5px;height:20px;background:#e02020;border-radius:1px;"></div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Brush Script MT',cursive;font-size:16px;color:#1a1a1a;">Karen Bass</div>
+            <div style="font-size:9px;color:#555;margin-top:1px;">Karen Bass, Mayor</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE EXPLANATION -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card green">
+          <div class="card-title" style="margin-bottom:6px">What we're going after</div>
+          <div class="card-body">A City of Los Angeles Certificate of Recognition — signed by the Mayor — awarded to End Overdose and Hazheart for community overdose prevention leadership in Van Nuys and the greater LA area. The same recognition given to organizations like Art Hearts Fashion for their decade of contributions to the city.</div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:6px">Why it matters</div>
+          <div class="card-body">Official civic recognition transforms Hazheart from a cultural brand into a documented community institution. It unlocks grant eligibility, strengthens media narratives, and gives the collaboration permanent, framed proof of impact.</div>
+        </div>
+        <div class="card gold">
+          <div class="card-title" style="margin-bottom:6px">The path to getting it</div>
+          <div class="card-body">Document a year of community impact → approach Councilmember Imelda Padilla (District 6, Van Nuys) → request the formal commendation. Certificates flow from the council district office up to the Mayor's signature.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="slide cta-slide" id="cta">
+  <div class="slide-inner">
+    <div class="eyebrow">Let's Build This</div>
+    <div class="cta-title">No one else<br><span class="g">has to die.</span></div>
+          <div class="cta-sub">Hazheart has the community and the culture. End Overdose has the mission, the training infrastructure, and the track record. Together we make overdose prevention impossible to ignore.</div>
+    <div class="cta-links">
+      <a class="cta-link primary" href="https://hazheart.com" target="_blank">hazheart.com</a>
+      <a class="cta-link secondary" href="https://endoverdose.net" target="_blank">endoverdose.net</a>
+      <a class="cta-link secondary" href="https://endoverdose.net/narcatsworld/" target="_blank">narcats world</a>
+    </div>
+    <div style="margin-top:36px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-dim)">Presented by Sacha Dubois</div>
+  </div>
+</section>
+
+<div class="scroll-hint">End Overdose × Hazheart · 2025 Partnership Proposal</div>
+
+</body>
+</html>
